@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gtja="http://schemas.android.com/apk/res/com.gtja.tonywang.lockpattern"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -15,7 +16,8 @@
 
     <com.gtja.tonywang.lockpattern.widget.LocusPassWordView
         android:id="@+id/mPassWordView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        gtja:password_min_len="3" />
 
 </RelativeLayout>

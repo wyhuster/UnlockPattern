@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 					if (encodedPwd.equals(pwd)) {
 						Toast.makeText(mContext, "密码正确", Toast.LENGTH_LONG)
 								.show();
-						mPwdView.clearPassword(2000);
+						mPwdView.markCorrect(2000);
 
 					} else {
 						Toast.makeText(mContext, "密码错误", Toast.LENGTH_LONG)
@@ -68,6 +68,13 @@ public class MainActivity extends Activity {
 						mPwdView.markError();
 					}
 				}
+			}
+
+			@Override
+			public void onPasswordLenError(int min, int max) {
+				Toast.makeText(getApplicationContext(),
+						"密码长度为" + min + "至" + max + "!", Toast.LENGTH_SHORT)
+						.show();
 			}
 		});
 	}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="unlock_pattern">
+
+        <!-- 密码的最短长度 -->
+        <attr name="password_min_len" format="integer" />
+        <!-- 密码的最长长度 -->
+        <attr name="password_max_len" format="integer" />
+        <!-- 密码消除时间 -->
+        <attr name="clear_time" format="integer" />
+        <!-- 密码点的内圈未选中状态颜色 -->
+        <attr name="inner_normal_color" format="color|reference" />
+        <!-- 密码点的外圈未选中状态颜色 -->
+        <attr name="outer_normal_color" format="color|reference" />
+        <!-- 密码点的内圈选中状态颜色 -->
+        <attr name="inner_select_color" format="color|reference" />
+        <!-- 密码点的外圈选中状态颜色 -->
+        <attr name="outer_select_color" format="color|reference" />
+        <!-- 密码点的内圈错误状态颜色 -->
+        <attr name="inner_error_color" format="color|reference" />
+        <!-- 密码点的外圈错误状态颜色 -->
+        <attr name="outer_error_color" format="color|reference" />
+        <!-- 密码点的内圈正确状态颜色 -->
+        <attr name="inner_correct_color" format="color|reference" />
+        <!-- 密码点的外圈正确状态颜色 -->
+        <attr name="outer_correct_color" format="color|reference" />
+    </declare-styleable>
+
+</resources>

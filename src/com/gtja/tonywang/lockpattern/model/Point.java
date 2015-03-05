@@ -1,9 +1,10 @@
 package com.gtja.tonywang.lockpattern.model;
 
 public class Point {
-	public static int STATE_NORMAL = 0;
-	public static int STATE_CHECK = 1; // 被选择
-	public static int STATE_CHECK_ERROR = 2; // 选择错误
+	public static final int STATE_NORMAL = 0;
+	public static final int STATE_CHECK = 1; // 被选择
+	public static final int STATE_CHECK_ERROR = 2; // 选择错误
+	public static final int STATE_CHECK_CORRECT = 3; // 选择错误
 
 	public float x;
 	public float y;

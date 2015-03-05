@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.gtja.tonywang.lockpattern.R;
 import com.gtja.tonywang.lockpattern.model.Point;
 import com.gtja.tonywang.lockpattern.util.MathUtil;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -17,7 +19,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class LocusPassWordView extends View {
 	private float width = 0;
@@ -33,33 +34,76 @@ public class LocusPassWordView extends View {
 	private List<Point> sPoints = new ArrayList<Point>();
 	// 是否正在画密码，ACTION_DOWN在一个point上时设置为true，ACTION_UP时设置为false
 	private boolean checking = false;
-	private long CLEAR_TIME = 1000; // 清除时间
-	private int pwdMaxLen = 9; // 最长密码
-	private int pwdMinLen = 4; // 最短密码
 	private boolean isTouch = true;
 
 	private Paint arrowPaint;
 	private Paint linePaint;
 	private Paint selectedPaint;
 	private Paint errorPaint;
+	private Paint correctPaint;
 	private Paint normalPaint;
-	private int errorColor = 0xffea0945;// 内圈error颜色
+
+	private long CLEAR_TIME = 1000; // 清除时间
+	private int pwdMaxLen = 9; // 最长密码
+	private int pwdMinLen = 4; // 最短密码
+
+	private int dotColor = 0xff929292; // 内圈normal颜色
+	private int outterDotColor = 0xffd9d9d9; // 外圈normal颜色
 	private int selectedColor = 0xff0596f6;// 内圈select颜色
 	private int outterSelectedColor = 0xff8cbad8;// 外圈select颜色
+	private int errorColor = 0xffea0945;// 内圈error颜色
 	private int outterErrorColor = 0xff901032; // 外圈error颜色
-	private int outterDotColor = 0xffd9d9d9; // 外圈normal颜色
-	private int dotColor = 0xff929292; // 内圈normal颜色
+	private int correctColor = 0xff33ff33;// 内圈correct颜色
+	private int outterCorrectColor = 0xff33ff99; // 外圈correct颜色
 
 	public LocusPassWordView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		getAttrs(context, attrs);
 	}
 
 	public LocusPassWordView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		getAttrs(context, attrs);
 	}
 
 	public LocusPassWordView(Context context) {
 		super(context);
+	}
+
+	/**
+	 * 获取自定义属性值
+	 * 
+	 * @param context
+	 * @param attrs
+	 */
+	private void getAttrs(Context context, AttributeSet attrs) {
+		TypedArray a = context.obtainStyledAttributes(attrs,
+				R.styleable.unlock_pattern);
+		pwdMinLen = a
+				.getInteger(R.styleable.unlock_pattern_password_min_len, 4);
+		pwdMaxLen = a
+				.getInteger(R.styleable.unlock_pattern_password_max_len, 9);
+
+		CLEAR_TIME = a.getInteger(R.styleable.unlock_pattern_clear_time, 1000);
+
+		dotColor = a.getColor(R.styleable.unlock_pattern_inner_normal_color,
+				0xff929292);
+		outterDotColor = a.getColor(
+				R.styleable.unlock_pattern_outer_normal_color, 0xffd9d9d9);
+		selectedColor = a.getColor(
+				R.styleable.unlock_pattern_inner_select_color, 0xff0596f6);
+		outterSelectedColor = a.getColor(
+				R.styleable.unlock_pattern_outer_select_color, 0xff8cbad8);
+		errorColor = a.getColor(R.styleable.unlock_pattern_inner_error_color,
+				0xffea0945);
+		outterErrorColor = a.getColor(
+				R.styleable.unlock_pattern_outer_error_color, 0xff901032);
+		correctColor = a.getColor(
+				R.styleable.unlock_pattern_inner_correct_color, 0xff33ff33);
+		outterCorrectColor = a.getColor(
+				R.styleable.unlock_pattern_outer_correct_color, 0xff33ff99);
+
+		a.recycle();
 	}
 
 	@Override
@@ -76,39 +120,50 @@ public class LocusPassWordView extends View {
 	}
 
 	private void drawToCanvas(Canvas canvas) {
-		boolean inErrorState = false;
+		// 线和箭头的paint默认颜色
+		int line_color = selectedColor;
 		// 画内外圈
 		for (int i = 0; i < mPoints.length; i++) {
 			for (int j = 0; j < mPoints[i].length; j++) {
 				Point p = mPoints[i][j];
-				if (p.state == Point.STATE_CHECK) {
+				switch (p.state) {
+				case Point.STATE_CHECK:
 					selectedPaint.setColor(outterSelectedColor);
 					canvas.drawCircle(p.x, p.y, dotRadius, selectedPaint);
 					selectedPaint.setColor(selectedColor);
 					canvas.drawCircle(p.x, p.y, dotRadius / 4, selectedPaint);
-				} else if (p.state == Point.STATE_CHECK_ERROR) {
-					inErrorState = true;
+					break;
+				case Point.STATE_CHECK_ERROR:
 					errorPaint.setColor(outterErrorColor);
 					canvas.drawCircle(p.x, p.y, dotRadius, errorPaint);
 					errorPaint.setColor(errorColor);
 					canvas.drawCircle(p.x, p.y, dotRadius / 4, errorPaint);
-				} else {
+
+					// 线和箭头的paint换成错误颜色
+					line_color = errorColor;
+					break;
+				case Point.STATE_CHECK_CORRECT:
+					correctPaint.setColor(outterCorrectColor);
+					canvas.drawCircle(p.x, p.y, dotRadius, correctPaint);
+					correctPaint.setColor(correctColor);
+					canvas.drawCircle(p.x, p.y, dotRadius / 4, correctPaint);
+
+					// 线和箭头的paint换成错误颜色
+					line_color = correctColor;
+					break;
+				default:
 					normalPaint.setColor(outterDotColor);
 					canvas.drawCircle(p.x, p.y, dotRadius, normalPaint);
 					normalPaint.setColor(dotColor);
 					canvas.drawCircle(p.x, p.y, dotRadius / 4, normalPaint);
+					break;
 				}
+
 			}
 		}
 
-		// 线和箭头的paint换颜色
-		if (inErrorState) {
-			arrowPaint.setColor(errorColor);
-			linePaint.setColor(errorColor);
-		} else {
-			arrowPaint.setColor(selectedColor);
-			linePaint.setColor(selectedColor);
-		}
+		arrowPaint.setColor(line_color);
+		linePaint.setColor(line_color);
 
 		// 画连接线和箭头
 		if (sPoints.size() > 0) {
@@ -222,23 +277,15 @@ public class LocusPassWordView extends View {
 		errorPaint.setAntiAlias(true);
 		errorPaint.setStrokeWidth(dotRadius / 6);
 
+		correctPaint = new Paint();
+		correctPaint.setStyle(Style.STROKE);
+		correctPaint.setAntiAlias(true);
+		correctPaint.setStrokeWidth(dotRadius / 6);
+
 		normalPaint = new Paint();
 		normalPaint.setStyle(Style.STROKE);
 		normalPaint.setAntiAlias(true);
 		normalPaint.setStrokeWidth(dotRadius / 9);
-	}
-
-	/**
-	 * 
-	 * 
-	 * @param index
-	 * @return
-	 */
-	public int[] getArrayIndex(int index) {
-		int[] ai = new int[2];
-		ai[0] = index / 3;
-		ai[1] = index % 3;
-		return ai;
 	}
 
 	/**
@@ -298,7 +345,7 @@ public class LocusPassWordView extends View {
 	}
 
 	/**
-	 * 
+	 * 添加点到已选择点sPoints中
 	 * 
 	 * @param point
 	 */
@@ -317,7 +364,7 @@ public class LocusPassWordView extends View {
 				}
 			}
 		}
-		this.sPoints.add(point);
+		sPoints.add(point);
 	}
 
 	/**
@@ -419,12 +466,9 @@ public class LocusPassWordView extends View {
 				reset();
 			} else if (sPoints.size() < pwdMinLen || sPoints.size() > pwdMaxLen) {
 				// 允许的密码长度不符合条件
-				// mCompleteListener.onPasswordTooMin(sPoints.size());
+				mCompleteListener.onPasswordLenError(pwdMinLen, pwdMaxLen);
 				error();
 				clearPassword();
-				Toast.makeText(this.getContext(),
-						"密码长度为" + pwdMinLen + "至" + pwdMaxLen + "!",
-						Toast.LENGTH_SHORT).show();
 			} else if (mCompleteListener != null) {
 				// 检验密码过程中不允许touch
 				disableTouch();
@@ -459,6 +503,18 @@ public class LocusPassWordView extends View {
 	public void markError(final long time) {
 		for (Point p : sPoints) {
 			p.state = Point.STATE_CHECK_ERROR;
+		}
+		this.clearPassword(time);
+	}
+
+	/**
+	 * 密码错误,外部设置所有已选点的state为正确,并且在time时间之后清除密码
+	 * 
+	 * @param time
+	 */
+	public void markCorrect(final long time) {
+		for (Point p : sPoints) {
+			p.state = Point.STATE_CHECK_CORRECT;
 		}
 		this.clearPassword(time);
 	}
@@ -522,6 +578,19 @@ public class LocusPassWordView extends View {
 
 	public interface OnCompleteListener {
 
+		/**
+		 * 手势密码设置完成
+		 * 
+		 * @param password
+		 */
 		public void onComplete(String password);
+
+		/**
+		 * 密码长度太长或太短
+		 * 
+		 * @param min
+		 * @param max
+		 */
+		public void onPasswordLenError(int min, int max);
 	}
 }
