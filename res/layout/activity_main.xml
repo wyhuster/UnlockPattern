@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:gtja="http://schemas.android.com/apk/res/com.gtja.tonywang.lockpattern"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#ff111111" >
 
     <TextView
         android:id="@+id/multi_tv_token_time_hint"
@@ -11,13 +12,21 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text=""
+        android:text="guo tai jun an"
+        android:textColor="@android:color/white"
         android:textSize="22sp" />
+
+    <com.gtja.tonywang.lockpattern.widget.LocusPassWordView
+        android:id="@+id/mPassWordRecordView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/multi_tv_token_time_hint"
+        android:layout_centerHorizontal="true" />
 
     <com.gtja.tonywang.lockpattern.widget.LocusPassWordView
         android:id="@+id/mPassWordView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        gtja:password_min_len="3" />
+        android:layout_height="wrap_content"
+        gtja:password_min_len="4" />
 
 </RelativeLayout>

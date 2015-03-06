@@ -519,10 +519,16 @@ public class LocusPassWordView extends View {
 		this.clearPassword(time);
 	}
 
+	/**
+	 * 允许touch
+	 */
 	public void enableTouch() {
 		isTouch = true;
 	}
 
+	/**
+	 * 不允许touch
+	 */
 	public void disableTouch() {
 		isTouch = false;
 	}
@@ -592,5 +598,29 @@ public class LocusPassWordView extends View {
 		 * @param max
 		 */
 		public void onPasswordLenError(int min, int max);
+	}
+
+	/**
+	 * 根据密码直接设置图案
+	 * 
+	 * @param password
+	 */
+	public void setRecordSelect(String password) {
+		if (password == null || password.length() == 0) {
+			return;
+		}
+		int length = password.length();
+		int[] nums = new int[length];
+		for (int i = 0; i < length; i++) {
+			nums[i] = password.charAt(i) - 48;
+		}
+		for (int index : nums) {
+			int col = (index - 1) % 3;
+			int row = (index - 1) / 3;
+			Point p = mPoints[row][col];
+			p.state = Point.STATE_CHECK;
+			sPoints.add(p);
+		}
+		postInvalidate();
 	}
 }
