@@ -16,7 +16,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -251,7 +250,6 @@ public class LocusPassWordView extends View {
 		mPoints[2][2] = new Point(x + middleX + dotPadding, y + middleY
 				+ dotPadding, 9);
 
-		Log.d("jerome", "canvas width:" + width);
 		dotRadius = width / 10;
 	}
 
@@ -552,7 +550,6 @@ public class LocusPassWordView extends View {
 		if (time > 1) {
 			if (task != null) {
 				task.cancel();
-				Log.d("task", "clearPassword cancel()");
 			}
 			postInvalidate();
 			task = new TimerTask() {
@@ -561,7 +558,6 @@ public class LocusPassWordView extends View {
 					postInvalidate();
 				}
 			};
-			Log.d("task", "clearPassword schedule(" + time + ")");
 			timer.schedule(task, time);
 		} else {
 			reset();
