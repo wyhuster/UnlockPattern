@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 import com.gtja.tonywang.lockpattern.R;
 import com.gtja.tonywang.lockpattern.model.Point;
-import com.gtja.tonywang.lockpattern.util.MathUtil;
+import com.gtja.tonywang.lockpattern.utils.MathUtil;
 
 import android.content.Context;
 import android.content.res.TypedArray;

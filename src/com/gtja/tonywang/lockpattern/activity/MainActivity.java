@@ -1,7 +1,7 @@
 package com.gtja.tonywang.lockpattern.activity;
 
 import com.gtja.tonywang.lockpattern.R;
-import com.gtja.tonywang.lockpattern.util.Md5Utils;
+import com.gtja.tonywang.lockpattern.utils.Md5Util;
 import com.gtja.tonywang.lockpattern.widget.LocusPassWordView;
 import com.gtja.tonywang.lockpattern.widget.LocusPassWordView.OnCompleteListener;
 
@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 						// 第二次设置密码与第一次相同　
 						sp.edit()
 								.putString("password",
-										Md5Utils.toMd5(mPassword, "")).commit();
+										Md5Util.toMd5(mPassword, "")).commit();
 						label.setText("请输入密码");
 						Toast.makeText(mContext, "密码设置成功!", Toast.LENGTH_LONG)
 								.show();
@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
 					return;
 				} else {
 					// 校验密码
-					String encodedPwd = Md5Utils.toMd5(mPassword, "");
+					String encodedPwd = Md5Util.toMd5(mPassword, "");
 					if (encodedPwd.equals(pwd)) {
 						Toast.makeText(mContext, "密码正确", Toast.LENGTH_LONG)
 								.show();

@@ -1,10 +1,10 @@
 /* Copyright (c) ViaCube.  All worldwide rights reserved. */
-package com.gtja.tonywang.lockpattern.util;
+package com.gtja.tonywang.lockpattern.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Md5Utils {
+public class Md5Util {
 
 	/**
 	 * get string md5

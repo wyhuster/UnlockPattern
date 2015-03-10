@@ -1,4 +1,4 @@
-package com.gtja.tonywang.lockpattern.util;
+package com.gtja.tonywang.lockpattern.utils;
 
 public class MathUtil {
 	/**
