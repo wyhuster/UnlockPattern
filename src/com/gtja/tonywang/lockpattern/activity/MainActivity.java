@@ -50,7 +50,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onComplete(String mPassword) {
 				String pwd = sp.getString("password", "");
-				Md5Utils md5 = new Md5Utils();
 
 				if (pwd.length() == 0) {
 					if (firstSetPwd == null || firstSetPwd.length() == 0) {
@@ -61,8 +60,8 @@ public class MainActivity extends Activity {
 					} else if (firstSetPwd.equals(mPassword)) {
 						// 第二次设置密码与第一次相同　
 						sp.edit()
-								.putString("password", md5.toMd5(mPassword, ""))
-								.commit();
+								.putString("password",
+										Md5Utils.toMd5(mPassword, "")).commit();
 						label.setText("请输入密码");
 						Toast.makeText(mContext, "密码设置成功!", Toast.LENGTH_LONG)
 								.show();
@@ -78,7 +77,7 @@ public class MainActivity extends Activity {
 					return;
 				} else {
 					// 校验密码
-					String encodedPwd = md5.toMd5(mPassword, "");
+					String encodedPwd = Md5Utils.toMd5(mPassword, "");
 					if (encodedPwd.equals(pwd)) {
 						Toast.makeText(mContext, "密码正确", Toast.LENGTH_LONG)
 								.show();
@@ -103,16 +102,13 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			sp.edit().remove("password").commit();
